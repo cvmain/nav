@@ -8,10 +8,7 @@ const userServices = {
         })
     },
     login: (username, password) => {
-        return UserModel.find({
-            username,
-            password
-        })
+        return UserModel.findOne({ username, password }, ['username', "email"]).sort({ username: -1 })
     }
 }
 module.exports = userServices

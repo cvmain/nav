@@ -6,8 +6,11 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/login');
 
-const { userDateRules } = require("./validate/userValidator")
+const { userDateRules } = require("./validate/userValidator");
+const JWT = require('./util/JWT');
+const { tokenErr } = require('./config/err.config');
 var app = express();
 
 // view engine setup
@@ -37,8 +40,30 @@ app.use(async(req, res, next) => {
 
 })
 
+app.use((req, res, next) => {
+    if (req.url.includes("login")) {
+        next()
+        return
+    }
+    const token = req.headers["authorization"] && req.headers["authorization"].split(" ")[1]
+    const result = JWT.verify(token)
+    if (token) {
+        if (result) {
+            console.log(result);
+            res.user = result
+            next()
+            return
+        } else {
+            res.send(tokenErr)
+        }
+    } else {
+        res.send(tokenErr)
+    }
+
+})
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/login", loginRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

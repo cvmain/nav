@@ -3,11 +3,7 @@ const router = express.Router();
 const userController = require("../controller/userController");
 
 
+// router.put("/update/:id", userController.update)
+/* 修改用户*/
 
-
-
-
-/* GET users listing. */
-router.post('/register', userController.register);
-router.get("/login", userController.login)
 module.exports = router;
