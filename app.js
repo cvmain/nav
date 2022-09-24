@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const { userDateRules } = require("./validate/userValidator")
 var app = express();
 
 // view engine setup
@@ -19,23 +20,40 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(async(req, res, next) => {
+    const value = userDateRules.validate(req.body, {
+        abortEarly: false,
+        allowUnknown: true
+    })
+    if (value.error) {
+        res.send({
+            code: 201,
+            msg: value.error.message,
+            result: ""
+        })
+    } else {
+        next()
+    }
+
+})
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    res.status(err.status || 500);
+    console.error(err)
+    res.send({
+        code: 10000,
+        msg: "未定义错误",
+        result: err
+    });
 });
 
 module.exports = app;

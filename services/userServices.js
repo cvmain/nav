@@ -6,6 +6,12 @@ const userServices = {
             password,
             email
         })
+    },
+    login: (username, password) => {
+        return UserModel.find({
+            username,
+            password
+        })
     }
 }
 module.exports = userServices
