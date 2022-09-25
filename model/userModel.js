@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: [true, "用户名重复"]
+        unique: true
     },
     password: {
         type: String,
@@ -22,5 +22,5 @@ const UserSchema = new Schema({
     }
 
 })
-const UserModel = mongoose.model('nav_users', new mongoose.Schema(UserSchema))
+const UserModel = mongoose.model('user', new mongoose.Schema(UserSchema))
 module.exports = UserModel

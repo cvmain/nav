@@ -6,11 +6,17 @@ const userController = {
     register: async(req, res, next) => {
         try {
             const result = await userServices.register(req.body)
-            res.send({
-                code: 200,
-                msg: "注册成功",
-                result
-            })
+            const auth_result = await userServices.authCreate(req.body)
+            if (result && auth_result) {
+                res.send({
+                    code: 200,
+                    msg: "注册成功",
+                    result
+                })
+            }
+
+
+
         } catch (err) {
             registerErr.result = err
             res.send(registerErr)
@@ -22,12 +28,8 @@ const userController = {
         if (!result) {
             res.send(loginErr)
         } else {
-            const token = jwt.sign({
-                username: result.username,
-                _id: result._id
-
-            }, jwtSecret, { expiresIn: '1h' })
-            res.header("authorization", token)
+            const token =
+                res.header("authorization", token)
             res.send({
                 code: 200,
                 msg: "登陆成功",
@@ -36,7 +38,30 @@ const userController = {
         }
     },
     update: async(req, res, next) => {
-        // const result = await update()
+        const result = await userServices.update(req.body, req.params.id)
+        console.log(req.params.id);
+        if (result.modifiedCount == 1) {
+            res.send({
+                code: 200,
+                msg: "修改成功",
+                result
+            })
+        } else {
+            res.send(result)
+        }
+    },
+    getUser: async(req, res, next) => {
+        const { id } = req.query
+        const result = await userServices.getUser(id)
+        const body = await userServices.getLove(id)
+        res.send({
+            code: 200,
+            msg: "获取成功",
+            result
+        })
+    },
+    setLove: async(req, res, next) => {
+        await userServices.setLove(req.body)
     }
 }
 module.exports = userController

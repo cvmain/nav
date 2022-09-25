@@ -2,25 +2,22 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 // Create Schema
-const UserSchema = new Schema({
-    username: {
+const LoveSchema = new Schema({
+    user_id: {
         type: String,
         required: true,
         unique: true
     },
-    password: {
+    nav_id: {
         type: String,
         required: true
     },
-    email: {
-        type: String
-    },
-    create_time: {
+    add_time: {
         type: Date,
         require: true,
         default: Date.now
     }
 
 })
-const UserModel = mongoose.model('nav', new mongoose.Schema(UserSchema))
-module.exports = UserModel
+const LoveModel = mongoose.model('love', new mongoose.Schema(LoveSchema))
+module.exports = LoveModel

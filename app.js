@@ -41,7 +41,7 @@ app.use(async(req, res, next) => {
 })
 
 app.use((req, res, next) => {
-    if (req.url.includes("login")) {
+    if (req.url.includes("login") || req.url.includes("users")) {
         next()
         return
     }
@@ -51,6 +51,7 @@ app.use((req, res, next) => {
         if (result) {
             console.log(result);
             res.user = result
+            console.log(result);
             next()
             return
         } else {
@@ -64,8 +65,10 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/login", loginRouter)
+app.use((req, res, next) => {
 
-// catch 404 and forward to error handler
+    })
+    // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
 });
